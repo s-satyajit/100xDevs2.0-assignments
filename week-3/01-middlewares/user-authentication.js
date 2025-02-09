@@ -31,7 +31,7 @@ app.post("/login", (req, res) => {
     // req.session = { user: username };
     res.status(200).send(dummyUser);
   } else {
-    res.status(401).send(`Invalid credentials`);
+    res.status(404).send(`Error`);
   }
 });
 
