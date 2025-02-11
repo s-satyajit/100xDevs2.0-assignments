@@ -8,7 +8,7 @@
 //    password: string 
 // } 
 
-// Returns a json web token with username encrypted
+// Returns a json web token with username encrypted 
 
 //  GET  /users 
 // Headers -  
@@ -53,7 +53,7 @@ app.post("/signin", function (req, res) {
 
   if (!userExists(username, password)) {
     return res.status(403).json({
-      msg: "User doesnt exist in our in memory db",
+      msg: "User doesn't exist in our in memory db",
     });
   }
 
