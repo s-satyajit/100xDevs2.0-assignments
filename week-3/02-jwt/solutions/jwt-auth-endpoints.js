@@ -2,7 +2,10 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 const jwtPassword = '123456'
 
-const app = express()
+const app = express();
+const PORT = 3000;
+
+app.use(express.json())
 
 const ALL_USERS = [
     {
@@ -17,15 +20,13 @@ const ALL_USERS = [
     },
     {
         username: 'priya@gmail.com',
-        password: 123321,
+        password: '123321',
         name: 'Priya Kumari'
     }
 ];
 
 const userExists = (username, password) => {
-    if(username == ALL_USERS.username && password == ALL_USERS.password)
-        return true;
-    return false
+    return ALL_USERS.some(user => user.username === username && user.password === password)
 }
 
 app.post('/signin', (req, res) => {
@@ -33,8 +34,34 @@ app.post('/signin', (req, res) => {
     const password = req.body.password;
 
     if(!userExists(username, password)) {
-        return res.status(403).json({
-            msg: "User doesn't exist in our memory db,"
+        res.status(403).json({
+            msg: `User doesnt exist in our memory db`
         })
     }
+
+    // const token = jwt.sign({username: username}, jwtPassword)
+    const token = jwt.sign({username}, jwtPassword)
+    res.json({
+        token,
+    })
+    console.log(token)
+})
+
+app.get('/users', (req, res) => {
+    const token = req.headers.authorization;
+    try {
+        const decoded = jwt.verify(token, jwtPassword);
+        const username = decoded.username;
+        const filteredUsers = ALL_USERS.filter(user => user.username == username)
+        res.json(filteredUsers)
+        console.log(filteredUsers)
+    } catch(err) {
+        return res.status(403).json({
+            msg: "Invalid token"
+        })
+    }
+})
+
+app.listen(PORT || 3000, () => {
+    console.log(`Server running on port ${PORT}`)
 })
