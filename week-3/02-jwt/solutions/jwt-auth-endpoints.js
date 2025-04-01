@@ -26,7 +26,13 @@ const ALL_USERS = [
 ];
 
 const userExists = (username, password) => {
-    return ALL_USERS.some(user => user.username === username && user.password === password)
+    // return ALL_USERS.some(user => user.username === username && user.password === password)
+    let userExists = false;
+    for(let i = 0; i < ALL_USERS.length; i++) {
+        if(ALL_USERS[i].username == username && ALL_USERS[i].password == password)
+            userExists = true;
+    }
+    return userExists;
 }
 
 app.post('/signin', (req, res) => {
@@ -52,7 +58,7 @@ app.get('/users', (req, res) => {
     try {
         const decoded = jwt.verify(token, jwtPassword);
         const username = decoded.username;
-        const filteredUsers = ALL_USERS.filter(user => user.username == username)
+        const filteredUsers = ALL_USERS.filter(user => user.username !== username)
         res.json(filteredUsers)
         console.log(filteredUsers)
     } catch(err) {
