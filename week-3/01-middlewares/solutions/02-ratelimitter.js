@@ -15,8 +15,10 @@ const rateLimitter = (req, res, next) => {
   numberOfRequestsForUser[userId]++;
 
   if (numberOfRequestsForUser[userId] > 5) {
-    return res.status(404).json({});
+    return res.status(404).json({msg: "User blocked"});
   }
+
+  req.rateCount = numberOfRequestsForUser[userId]
 
   next();
 };
@@ -24,11 +26,17 @@ const rateLimitter = (req, res, next) => {
 app.use(rateLimitter);
 
 app.get("/user", (req, res) => {
-  res.status(200).json({ name: "john" });
+  res.status(200).json({ 
+    name: "john",
+    rateCount: req.rateCount,
+  });
 });
 
 app.post("/user", (req, res) => {
-  res.status(200).json({ msg: "created dummy user" });
+  res.status(200).json({ 
+    msg: "created dummy user",
+    rateCount: req.rateCount,
+  });
 });
 
 setInterval(() => {
