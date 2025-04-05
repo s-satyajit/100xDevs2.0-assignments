@@ -28,30 +28,32 @@
             // document.getElementById('container').appendChild(outerDiv)
             
             const todo = document.getElementById('todo')
-            todo.appendChild(createChild(title, description, globalId++))
+            todo.appendChild(createElement(title, description, globalId++))
         }
 
-        const createChild = (title, description, id) => {
+        const createElement = (title, description, id) => {
             const child = document.createElement('div')
             const firstGrandChild = document.createElement('div')
             firstGrandChild.innerHTML = title
             const secondGrandChild = document.createElement('div')
             secondGrandChild.innerHTML = description
             const thirdGrandChild = document.createElement('button')
-            thirdGrandChild.innerHTML = `Mark as Done`
+            thirdGrandChild.innerHTML = `Mark as Done!`
             thirdGrandChild.setAttribute('onClick', `markAsDone(${id})`)
             child.appendChild(firstGrandChild)
             child.appendChild(secondGrandChild)
             child.appendChild(thirdGrandChild)
             child.setAttribute('id', id)
-            return child;
+            console.log(id)
+            return child 
         }
 
         const markAsDone = (todoId) => {
             const parent = document.getElementById(todoId)
             parent.children[2].innerHTML = `Done!`
+            console.log(todoId)
         }
-        
+
     </script>
 </body>
 </html>
