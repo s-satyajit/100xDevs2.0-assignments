@@ -1,34 +1,27 @@
 <!DOCTYPE html>
-<br lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo</title>
 </head>
-<br>
-    <input id="title" type="text" placeholder="title"><br></br>
-    <input id="description" type="text" placeholder="description"><br></br>
+<body>
+    <br>
+    <input type="text" placeholder="title" id="title"> <br> <br>
+    <input type="text" placeholder="description" id="description"> <br><br>
     <button onclick="addTodo()">Add Todo</button>
     <div id="todo"></div>
 
     <script>
         let globalId = 1;
+        
         const addTodo = () => {
             const title = document.getElementById('title').value
             const description = document.getElementById('description').value
 
-            // const originalHtml = document.getElementById('container').innerHTML
-            // document.getElementById('container').innerHTML = originalHtml + `
-            //     <div>${title}</div>
-            //     <div>${description}</div>
-            //     <button>Mark as done</button>
-            // `
-            // const outerDiv = document.createElement('div')
-            // outerDiv.innerHTML = title
-            // document.getElementById('container').appendChild(outerDiv)
-            
             const todo = document.getElementById('todo')
             todo.appendChild(createElement(title, description, globalId++))
+            console.log(title)
         }
 
         const createElement = (title, description, id) => {
@@ -37,7 +30,7 @@
             firstGrandChild.innerHTML = title
             const secondGrandChild = document.createElement('div')
             secondGrandChild.innerHTML = description
-            const thirdGrandChild = document.createElement('button')
+            const thirdGrandChild = document.createElement('div')
             thirdGrandChild.innerHTML = `Mark as Done!`
             thirdGrandChild.setAttribute('onClick', `markAsDone(${id})`)
             child.appendChild(firstGrandChild)
@@ -45,7 +38,7 @@
             child.appendChild(thirdGrandChild)
             child.setAttribute('id', id)
             console.log(id)
-            return child 
+            return child
         }
 
         const markAsDone = (todoId) => {
@@ -55,5 +48,6 @@
         }
 
     </script>
+
 </body>
 </html>
