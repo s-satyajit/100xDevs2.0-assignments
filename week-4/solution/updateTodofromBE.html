@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic TODO</title>
+</head>
+<body>
+    <br>
+    <input type="text" placeholder="title" id="title"> <br><br>
+    <input type="text" placeholder="description" id="description"> <br><br>
+    <div id="container"></div>
+
+    <script>
+        const createChild = (title, description, id) => {
+            const child = document.createElement('div')
+            const firstGrandChild = document.createElement('div')
+            firstGrandChild.innerHTML = title;
+            const secondGrandChild = document.createElement('div')
+            secondGrandChild.innerHTML = description;
+            const thirdGrandChild = document.createElement('div')
+            thirdGrandChild.innerHTML = `Mark as done!`
+            thirdGrandChild.setAttribute('id', id)
+            child.appendChild(firstGrandChild)
+            child.appendChild(secondGrandChild)
+            child.appendChild(thirdGrandChild)
+            return child;
+        }
+        const updateDomAccToState = (state) => {
+            const parent = document.getElementById('container')
+            parent.innerHTML = ''
+            for(let i = 0; i < state.length; i++) {
+                const child = createChild(state[i].title, state[i].description, state[i].id)
+                parent.appendChild(child)
+            }
+        }
+        window.setInterval(async () => {
+            const res = await fetch(`http://localhost:3000/todos`)
+            const json = await res.json()
+            updateDomAccToState(json.todos)
+        }, 5000)
+    </script>
+</body>
+</html>
