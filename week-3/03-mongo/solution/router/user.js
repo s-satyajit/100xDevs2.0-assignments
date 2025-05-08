@@ -18,7 +18,7 @@ router.post("/signup", async (req, res) => {
 });
 
 router.get("/courses", authUser, async (req, res) => {
-  const resposne = await Course.find({});
+  const response = await Course.find();
 
   res.json({
     courses: response,
@@ -29,7 +29,7 @@ router.post("/courses/:courseId", authUser, async (req, res) => {
   const courseId = req.params.courseId;
   const username = req.headers.username;
 
-  await Course.updateOne(
+  await User.updateOne(
     {
       username,
     },
@@ -43,7 +43,7 @@ router.post("/courses/:courseId", authUser, async (req, res) => {
   });
 });
 
-router.get("/courses", authUser, async (req, res) => {
+router.get("/purchased-courses", authUser, async (req, res) => {
   const user = await User.findOne({
     username: req.headers.username,
   });

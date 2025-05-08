@@ -9,9 +9,11 @@ const authUser = (req, res, next) => {
     password,
   }).then((value) => {
     if (value) next();
-    res.status(403).json({
-      msg: `User doesn't exist`,
-    });
+    else {
+      res.status(403).json({
+        msg: `User doesn't exist`,
+      });
+    }
   });
 };
 
