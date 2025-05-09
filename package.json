@@ -1,0 +1,21 @@
+{
+  "name": "100xassignments",
+  "version": "1.0.0",
+  "description": "Welcome to the repository for the 100xDevs Cohort 2 program assignments. This repository contains my ongoing solutions to the assignments provided by the program. I am solving these assignments daily, learning continuously, and updating this repository regularly.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s-satyajit/100xDevs2.0-assignments.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/s-satyajit/100xDevs2.0-assignments/issues"
+  },
+  "homepage": "https://github.com/s-satyajit/100xDevs2.0-assignments#readme"
+}
