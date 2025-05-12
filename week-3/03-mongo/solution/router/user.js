@@ -29,18 +29,21 @@ router.post("/courses/:courseId", authUser, async (req, res) => {
   const courseId = req.params.courseId;
   const username = req.headers.username;
 
-  await User.updateOne(
-    {
-      username,
-    },
-    {
-      $push: { purchasedCourses: courseId },
-    }
-  );
-
-  res.json({
-    msg: `Course purchased successfully!`,
-  });
+  try {
+    await User.updateOne(
+      {
+        username,
+      },
+      {
+        $push: { purchasedCourses: courseId },
+      }
+    );
+    res.json({
+      msg: `Course purchased successfully`,
+    });
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 router.get("/purchased-courses", authUser, async (req, res) => {
