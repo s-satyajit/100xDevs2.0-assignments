@@ -1,81 +1,67 @@
-const { Router } = require("express");
-const adminMiddleware = require("../middleware/admin");
-const { Admin, User, Course } = require("../db");
-const {JWT_SECRET} = require("../config");
-const router = Router();
-const jwt = require("jsonwebtoken");
+import express from "express";
+import jwt from "jsonwebtoken";
+import { Admin, Course } from "../models/models.js";
+import authAdmin from "../middlewares/admin.js";
+import dotenv from "dotenv";
+const router = express.Router();
 
-// Admin Routes
-router.post('/signup', async (req, res) => {
-    // Implement admin signup logic
-    const username = req.body.username;
-    const password = req.body.password;
+dotenv.config();
 
-    // check if a user with this username already exists
-    await Admin.create({
-        username: username,
-        password: password
-    })
+router.post("/signup", async (req, res) => {
+  const { username, password } = req.body;
 
-    res.json({
-        message: 'Admin created successfully'
-    })
+  await Admin.create({
+    username,
+    password,
+  });
+
+  res.json({
+    msg: `Admin created successfully!`,
+  });
 });
 
-router.post('/signin', async (req, res) => {
-    // Implement admin signup logic
-    const username = req.body.username;
-    const password = req.body.password;
-    console.log(JWT_SECRET);
+router.post("/signin", async (req, res) => {
+  const { username, password } = req.body;
 
-    const user = await User.find({
-        username,
-        password
-    })
-    if (user) {
-        const token = jwt.sign({
-            username
-        }, JWT_SECRET);
-
-        res.json({
-            token
-        })
-    } else {
-        res.status(411).json({
-            message: "Incorrect email and pass"
-        })
-    }
+  const admin = await Admin.findOne({
+    username,
+    password,
+  });
+  if (!admin) {
+    return res.status(401).json({ msg: `Invalid credentials!` });
+  }
+  const token = jwt.sign(
+    { username: admin.username, role: "admin" },
+    process.env.JWT_SECRET,
+    { expiresIn: "1hr" }
+  );
+  res.json({ token });
 });
 
+router.post("/courses", authAdmin, async (req, res) => {
+  const { title, description, imageLink, price } = req.body;
 
-router.post('/courses', adminMiddleware, async (req, res) => {
-    // Implement course creation logic
-    const title = req.body.title;
-    const description = req.body.description;
-    const imageLink = req.body.imageLink;
-    const price = req.body.price;
-    // zod
-    const newCourse = await Course.create({
-        title,
-        description,
-        imageLink,
-        price
-    })
+  if (req.role !== "admin") {
+    res.json({ error: `Forbidden, admins only!` });
+  }
 
-    res.json({
-        message: 'Course created successfully', courseId: newCourse._id
-    })
+  await Course.create({
+    title,
+    description,
+    imageLink,
+    price,
+  });
+
+  res.json({ msg: `Course created successfully!` });
 });
 
-router.get('/courses', adminMiddleware, async (req, res) => {
-    // Implement fetching all courses logic
-    const response = await Course.find({});
+router.get("/courses", authAdmin, async (req, res) => {
+  if (req.role !== "admin") {
+    res.json({ error: `Forbidden, admins only!` });
+  }
 
-    res.json({
-        courses: response
-    })
-
+  const courses = await Course.find();
+  res.json({ courses });
 });
 
-
-module.exports = router;
+export default router;
